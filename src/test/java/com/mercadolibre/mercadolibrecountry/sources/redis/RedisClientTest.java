@@ -8,15 +8,10 @@ import com.mercadolibre.mercadolibrecountry.domain.model.Country;
 import com.mercadolibre.mercadolibrecountry.domain.model.Currency;
 import com.mercadolibre.mercadolibrecountry.domain.model.IpAddress;
 import com.mercadolibre.mercadolibrecountry.sources.redis.country.info.RedisCountryDetail;
-import com.mercadolibre.mercadolibrecountry.sources.redis.country.info.RedisCountryMapper;
-import com.mercadolibre.mercadolibrecountry.sources.redis.country.info.RedisCurrencyMapper;
-import com.mercadolibre.mercadolibrecountry.sources.redis.ip.api.RedisIpAddressMapper;
+import com.mercadolibre.mercadolibrecountry.sources.redis.ip.api.RedisIpLocation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestRedisConfiguration.class)
 @ActiveProfiles("test")
@@ -86,6 +82,16 @@ class RedisClientTest
     @Test
     void when_IpLocation_findById_then_success() {
 
+        // This will make sure the actual method opsForValue is not called and mocked valueOperations is returned
+        doReturn(valueOperations).when(redisTemplate).opsForValue();
+
+        // This will make sure the actual method get is not called and mocked value is returned
+        var redisIpLocation = new RedisIpLocation();
+        redisIpLocation.setIpAddress("8.8.8.8");
+        redisIpLocation.setCountryCode("US");
+        redisIpLocation.setCountryName("USA");
+        doReturn(getJson(redisIpLocation)).when(valueOperations).get(anyString());
+
         var country  = redisClient.findIpLocation("8.8.8.8");
 
         assertNotNull(country);
@@ -127,12 +133,25 @@ class RedisClientTest
         doReturn(valueOperations).when(redisTemplate).opsForValue();
 
         // This will make sure the actual method get is not called and mocked value is returned
-        doReturn(new Country( "United states of america","USA", List.of(new Currency()))).when(valueOperations).get(anyString());
+        var jsonRaw = new Country( "United states of america","USA", List.of(new Currency("USD", "DOLLAR", "$", 0.0D, 0.0D)));
+        doReturn(getJson(jsonRaw)).when(valueOperations).get(anyString());
 
-        Country country = redisClient.findCountryDetailByCode("USA");
+        var country = redisClient.findCountryDetailByCode("USA");
+        System.out.println(country);
         assertEquals("USA", country.getIsoCode() );
         assertEquals("United states of america", country.getName());
         assertEquals(1, country.getCurrencies().size() );
+    }
+
+    private String getJson(Object o)
+    {
+        try {
+            var objectMapper = new ObjectMapper();
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Test
@@ -196,6 +215,13 @@ class RedisClientTest
     @Test
     void when_saveCurrencyRate_ok()
     {
+        // This will make sure the actual method opsForValue is not called and mocked valueOperations is returned
+        doReturn(valueOperations).when(redisTemplate).opsForValue();
+
+        // This will make sure the actual method get is not called and mocked value is returned
+        doNothing().when(valueOperations).set(anyString(), any());
+        doReturn(Boolean.TRUE).when(redisTemplate).expire(anyString(), any());
+
         assertDoesNotThrow(() -> redisClient.saveCurrencyRate("USD", "COP", 3800.0D));
     }
 
