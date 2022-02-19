@@ -49,7 +49,8 @@ pipeline
             {
                 withSonarQubeEnv(credentialsId: 'sonar-credentialsId', installationName: 'Sonar')
                 {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources=src/ -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar -Dsonar.java.binaries=target/classes/"
+                    sh("mvn clean verify sonar:sonar")
+//                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources=src/ -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar -Dsonar.java.binaries=target/classes/"
                 }
             }
         }
