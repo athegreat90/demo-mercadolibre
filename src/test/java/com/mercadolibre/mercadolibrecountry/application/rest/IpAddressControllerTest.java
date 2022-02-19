@@ -35,10 +35,4 @@ class IpAddressControllerTest {
         assertEquals("1.1.1.1", response.getAddress());
     }
 
-    @Test
-    void when_main_is_ok()
-    {
-        assertDoesNotThrow(() -> MercadoLibreCountryApplication.main(new String[] {}));
-    }
-
 }
