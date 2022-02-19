@@ -1,5 +1,6 @@
 package com.mercadolibre.mercadolibrecountry.sources.redis;
 
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import redis.embedded.RedisServer;
 
@@ -10,10 +11,12 @@ import java.util.Random;
 @TestConfiguration
 public class TestRedisConfiguration
 {
+
     private RedisServer redisServer;
 
-    public TestRedisConfiguration() {
-        this.redisServer = RedisServer.builder().port(6379).setting("maxheap 2gb").setting("timeout 30000").build();
+    public TestRedisConfiguration(RedisProperties redisProperties) {
+//        this.redisServer = RedisServer.builder().port(redisProperties.getPort()).setting("maxheap 2gb").setting("timeout 30000").build();
+        this.redisServer = new RedisServer(redisProperties.getPort());
     }
 
     @PostConstruct
