@@ -22,8 +22,8 @@
         <gmavenplus-plugin.version>1.12.1</gmavenplus-plugin.version>
         <docker-maven-plugin.version>0.36.0</docker-maven-plugin.version>
         <groovy-all.version>3.0.8</groovy-all.version>
-        <docker.image.prefix>alvaro.agudelo</docker.image.prefix>
-        <docker.image.name>demo.schedule</docker.image.name>
+        <docker.image.prefix>athegreat90</docker.image.prefix>
+        <docker.image.name>demo.currency</docker.image.name>
         <jacoco-maven-plugin>0.8.7</jacoco-maven-plugin>
         <spring.cloud-version>2020.0.5</spring.cloud-version>
     </properties>

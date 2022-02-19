@@ -95,7 +95,7 @@ pipeline
         {
             steps
             {
-                sh 'mvn clean package -DskipTests && ls -altr'
+                sh 'mvn clean package docker:build docker:push -DskipTests'
             }
         }
     }
