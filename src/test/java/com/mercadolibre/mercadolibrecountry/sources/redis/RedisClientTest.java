@@ -51,6 +51,10 @@ class RedisClientTest
         try
         {
             redisServer = RedisServer.builder().port(6370).build();
+            if (redisServer.isActive())
+            {
+                return;
+            }
             redisServer.start();
         }
         catch (Exception e)

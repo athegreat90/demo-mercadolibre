@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.mercadolibre.mercadolibrecountry.utils.UtilsService.getOperatingSystem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -33,6 +34,12 @@ class IpAddressControllerTest {
         when(domainIpAddressService.findIpAddress("1.1.1.1")).thenReturn(ip);
         var response = this.ipAddressController.findIpAddress("1.1.1.1");
         assertEquals("1.1.1.1", response.getAddress());
+    }
+
+    @Test
+    void getOs()
+    {
+        System.out.println(getOperatingSystem());
     }
 
 }
