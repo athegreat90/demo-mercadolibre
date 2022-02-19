@@ -98,5 +98,13 @@ pipeline
                 sh 'mvn clean package docker:build docker:push -DskipTests'
             }
         }
+        stage('Clean')
+        {
+            steps
+            {
+                sh 'docker system prune -a -f'
+                sh 'mvn clean'
+            }
+        }
     }
 }
