@@ -13,7 +13,7 @@ public class TestRedisConfiguration
     private RedisServer redisServer;
 
     public TestRedisConfiguration() {
-        this.redisServer = RedisServer.builder().port(6370).setting("maxheap 2gb").setting("timeout 30000").build();
+        this.redisServer = RedisServer.builder().port(6379).setting("maxheap 2gb").setting("timeout 30000").build();
     }
 
     @PostConstruct

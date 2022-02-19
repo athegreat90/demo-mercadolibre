@@ -50,7 +50,7 @@ class RedisClientTest
     {
         try
         {
-            redisServer = RedisServer.builder().port(6370).build();
+            redisServer = RedisServer.builder().port(6379).build();
             if (redisServer.isActive())
             {
                 return;
