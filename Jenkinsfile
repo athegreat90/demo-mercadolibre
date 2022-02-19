@@ -47,11 +47,15 @@ pipeline
             }
             steps
             {
-                withSonarQubeEnv(credentialsId: 'sonar-credentialsId', installationName: 'Sonar')
+                withCredentials([string(credentialsId: 'sonar-credentialsId', variable: 'SONAR_TOKEN')])
                 {
-                    sh("mvn clean verify sonar:sonar")
-//                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources=src/ -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar -Dsonar.java.binaries=target/classes/"
+                    sh("mvn clean verify sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=http://192.168.1.217:9000/")
                 }
+//                 withSonarQubeEnv(credentialsId: 'sonar-credentialsId', installationName: 'Sonar')
+//                 {
+//                     sh("mvn clean verify sonar:sonar")
+// //                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.sources=src/ -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar -Dsonar.java.binaries=target/classes/"
+//                 }
             }
         }
         stage('SQuality Gate')
