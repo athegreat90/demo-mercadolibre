@@ -9,8 +9,6 @@ import com.mercadolibre.mercadolibrecountry.domain.model.Currency;
 import com.mercadolibre.mercadolibrecountry.domain.model.IpAddress;
 import com.mercadolibre.mercadolibrecountry.sources.redis.country.info.RedisCountryDetail;
 import com.mercadolibre.mercadolibrecountry.sources.redis.ip.api.RedisIpLocation;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.ActiveProfiles;
-import redis.embedded.RedisServer;
 
 import java.util.ArrayList;
 import java.util.List;

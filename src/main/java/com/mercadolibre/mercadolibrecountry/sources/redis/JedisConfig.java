@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 @Log4j2
@@ -20,13 +17,6 @@ public class JedisConfig {
     private  String host;
     @Value("${com.mercadolibre.redis.port:6379}")
     private Integer port;
-
-    @PostConstruct
-    public void init()
-    {
-        log.info("Prop: {}", this.host);
-        log.info("Prop: {}", this.port);
-    }
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory()
