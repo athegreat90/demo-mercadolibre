@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestRedisConfiguration.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class RedisClientTest
 {
@@ -43,36 +43,12 @@ class RedisClientTest
     @MockBean
     private ValueOperations valueOperations;
 
-    private RedisServer redisServer;
-
-    @BeforeEach
-    public void setUp()
-    {
-        try
-        {
-            redisServer = RedisServer.builder().port(6379).build();
-            if (redisServer.isActive())
-            {
-                return;
-            }
-            redisServer.start();
-        }
-        catch (Exception e)
-        {
-            //do nothing
-        }
-    }
-
-    @AfterEach
-    public void tearDown()
-    {
-        redisServer.stop();
-    }
-
-
     @Test
     void when_IpLocation_save_redis_then_success()
     {
+        saveMockRedis();
+
+
         IpAddress ipAddressModel = IpAddress.builder()
                 .address("8.8.8.8")
                 .country(Country.builder().isoCode("CO").name("Colombia").build())
@@ -81,6 +57,14 @@ class RedisClientTest
         assertDoesNotThrow(() -> redisClient.saveIpLocation(ipAddressModel));
 
 
+    }
+
+    private void saveMockRedis() {
+        // This will make sure the actual method opsForValue is not called and mocked valueOperations is returned
+        doReturn(valueOperations).when(redisTemplate).opsForValue();
+        doReturn(Boolean.TRUE).when(redisTemplate).expire(any(), any());
+        // This will make sure the actual method get is not called and mocked value is returned
+        doNothing().when(valueOperations).set(anyString(), any());
     }
 
     @Test
@@ -116,7 +100,10 @@ class RedisClientTest
 
 
     @Test
-    void when_RedisCountry_save_then_success() {
+    void when_RedisCountry_save_then_success()
+    {
+        saveMockRedis();
+
         List<Currency> currencies = new ArrayList<>();
 
         currencies.add( Currency.builder()

@@ -7,6 +7,7 @@ import redis.embedded.RedisServer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @TestConfiguration
 public class TestRedisConfiguration
@@ -16,7 +17,11 @@ public class TestRedisConfiguration
 
     public TestRedisConfiguration(RedisProperties redisProperties) {
 //        this.redisServer = RedisServer.builder().port(redisProperties.getPort()).setting("maxheap 2gb").setting("timeout 30000").build();
-        this.redisServer = new RedisServer(redisProperties.getPort());
+        if (redisServer != null && redisServer.isActive())
+        {
+            return;
+        }
+        this.redisServer = new RedisServer(ThreadLocalRandom.current().nextInt(65000));
     }
 
     @PostConstruct
