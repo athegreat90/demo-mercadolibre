@@ -47,10 +47,14 @@ pipeline
             }
             steps
             {
-                withCredentials([string(credentialsId: 'sonar-credentialsId', variable: 'SONAR_TOKEN')])
+                withSonarQubeEnv('SonarQubeScanner')
                 {
-                    sh("mvn clean verify sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=http://192.168.1.217:9000/")
+                    sh("mvn clean verify sonar:sonar")
                 }
+//                 withCredentials([string(credentialsId: 'sonar-credentialsId', variable: 'SONAR_TOKEN')])
+//                 {
+//                     sh("mvn clean verify sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=http://192.168.1.217:9000/")
+//                 }
 //                 withSonarQubeEnv(credentialsId: 'sonar-credentialsId', installationName: 'Sonar')
 //                 {
 //                     sh("mvn clean verify sonar:sonar")
